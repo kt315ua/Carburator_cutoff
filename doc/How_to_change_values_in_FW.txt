@@ -1,0 +1,10 @@
+
+    Address -   MiniPro -   Source code
+                            IF PERIOD < STORED THEN
+                            SOUND BIPPER,[120,10] -       ' Bipper
+                            TRIGGER_OUT = 0                 ' Cutoff trigger
+  00000188       0000C4     PAUSE 17                        ' Cutoff triger timeout
+                            TRIGGER_OUT = 1                 ' Turn it ON - restore trigger output
+  0000018e       0000C7     PAUSE 20                        ' Delay for 'ON' state with  before next cycle
+                            ENDIF 
+

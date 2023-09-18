@@ -1,0 +1,56 @@
+'*****************************
+'* Name    : ShiftLight.bas  *
+'* Author  : SSh             *
+'* MCU     : PIC12F675       *
+'* OSC     : Internal        *
+'*****************************
+
+@ DEVICE PIC12F675,INTOSC 'Set oscillator - internal  
+DEFINE OSC 4           ' Internal Freq. 4 MHz
+
+TACHO  var GPIO.0
+LED    var GPIO.1
+SETB   var GPIO.4
+
+HPULSE VAR WORD
+LPULSE VAR WORD
+PERIOD VAR WORD
+STORED VAR WORD
+
+TRISIO = %010001                           
+ANSEL  = 0                
+CMCON  = %00000111         
+
+main:
+READ 0, STORED.Byte0
+READ 1, STORED.Byte1
+
+pulsin TACHO, 0, LPULSE
+pulsin TACHO, 1, HPULSE
+PERIOD = LPULSE+HPULSE
+
+IF SETB = 0 THEN
+WRITE 0, PERIOD.Byte0
+WRITE 1, PERIOD.Byte1
+ENDIF
+
+IF PERIOD = 0 THEN
+LED = 0
+PAUSE 60 ' 
+LED = 1
+PAUSE 20 '
+GOTO main
+ENDIF
+
+IF PERIOD < STORED THEN
+' SOUND BIPPER,[120,10] - комментируем эту строку
+LED = 0
+PAUSE 17 ' - вставляем задежку между выключением
+LED = 1
+PAUSE 20 ' - и включением транзистора
+
+ENDIF
+
+goto main
+END
+
